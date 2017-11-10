@@ -1,0 +1,25 @@
+{
+    "target": "type",
+    "attributes": [
+        {
+            "name": "body-length",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "wing-length",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "body-width",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "wing-width",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "type",
+            "type": "CATEGORICAL"
+        }
+    ]
+}

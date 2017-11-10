@@ -1,0 +1,41 @@
+{
+    "target": "test_result",
+    "attributes": [
+        {
+            "name": "plasma_glucose",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "bp",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "test_result",
+            "type": "CATEGORICAL"
+        },
+        {
+            "name": "skin_thickness",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "num_pregnancies",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "insulin",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "bmi",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "pedigree",
+            "type": "NUMERIC"
+        },
+        {
+            "name": "age",
+            "type": "NUMERIC"
+        }
+    ]
+}
