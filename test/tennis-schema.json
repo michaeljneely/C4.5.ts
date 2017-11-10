@@ -1,0 +1,25 @@
+{
+    "target": "PlayTennis",
+    "attributes": [
+        {
+            "name": "Outlook",
+            "type": "CATEGORICAL"
+        },
+        {
+            "name": "Temperature",
+            "type": "CATEGORICAL"
+        },
+        {
+            "name": "Humidity",
+            "type": "CATEGORICAL"
+        },
+        {
+            "name": "Windy",
+            "type": "CATEGORICAL"
+        },
+        {
+            "name": "PlayTennis",
+            "type": "CATEGORICAL"
+        }
+    ]
+}

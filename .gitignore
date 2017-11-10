@@ -1,0 +1,28 @@
+# Logs
+logs
+*.log
+
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+#OS Files
+.ds_store
+
+# Coverage #
+coverage/
+.coveralls.yml
+
+# Compiled binary addons #
+build/
+typings/
+
+# Node Modules #
+node_modules
+
+# Dist #
+/dist
+
+.idea
