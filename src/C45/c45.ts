@@ -11,8 +11,8 @@ export class C45 {
         this._decisionTree = new DecisionTree(null, null, null);
     }
 
-    public train(list: Array<Instance> = this._dataSet.instances, target: Attribute = this._dataSet.target) {
-        this.buildDecisionTree(this._dataSet.instances, this._dataSet.attributes, target, this._decisionTree);
+    public train(list: Array<Instance> = this._dataSet.trainingInstances, target: Attribute = this._dataSet.target) {
+        this.buildDecisionTree(list, this._dataSet.attributes, target, this._decisionTree);
         this.displayTree();
         this.test();
         this.report();
@@ -30,7 +30,7 @@ export class C45 {
 
     // TODO
     private displayTree(): void {
-        return  this._decisionTree.print();
+        return this._decisionTree.print();
     }
 
     private buildDecisionTree(list: Array<Instance>, attributes: Array<Attribute>, target: Attribute, parent: DecisionTree, condition?: string) {
