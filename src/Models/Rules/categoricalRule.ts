@@ -3,10 +3,12 @@ import {Attribute, Instance} from '../';
 export class CategoricalRule {
 
     private _attribute: Attribute;
+    private _condition: string;
     private  _splitMap: Map<string, Array<Instance>>;
 
-    constructor(attribute: Attribute) {
+    constructor(attribute: Attribute, condition: string) {
         this._attribute = attribute;
+        this._condition = condition;
         this._splitMap = new Map<string, Array<Instance>>();
         this._attribute.uniqueValues.forEach((value) => {
             this._splitMap.set(value.toString(), new Array<Instance>());
@@ -21,7 +23,8 @@ export class CategoricalRule {
         return this._splitMap;
     }
 
-    public print() {
-        console.log('Split on ' + this._attribute.name);
+    public print(): string {
+        const prepend = (this._condition) ? `Condition: ${this._condition}, ` : ``;
+        return `${prepend}Split on Categorical Attribute: ${this._attribute.name}`;
     }
 }

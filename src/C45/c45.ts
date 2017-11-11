@@ -30,10 +30,10 @@ export class C45 {
 
     // TODO
     private displayTree(): void {
-        return;
+        return  this._decisionTree.print();
     }
 
-    private buildDecisionTree(list: Array<Instance>, attributes: Array<Attribute>, target: Attribute, parent: DecisionTree) {
+    private buildDecisionTree(list: Array<Instance>, attributes: Array<Attribute>, target: Attribute, parent: DecisionTree, condition?: string) {
           // Base Zero: If the list is empty we are done
           if (list.length === 0) {
               return;
@@ -41,7 +41,7 @@ export class C45 {
           // Base One: If all belong to same class, declare new PredictionRule Leaf
           const baseOne = this._dataSet.unanimousClass(list, target);
           if (baseOne !== 'false') {
-              parent.rule = new PredictionRule(target, baseOne);
+              parent.rule = new PredictionRule(target, condition, baseOne, list);
               return;
           }
           // For each attribute a, find the normalized information gain ratio from splitting on a.
@@ -49,20 +49,20 @@ export class C45 {
           const split = this.chooseSplitAttribute(list, attributes, target);
           // Base Two: If 0 InformationGain => declare new Prediction Rule Leaf with majority class
           if (!split.desiredAttribute) {
-              parent.rule = new PredictionRule(target, this._dataSet.majorityClass(list, target));
+              parent.rule = new PredictionRule(target, condition, this._dataSet.majorityClass(list, target), list);
               return;
           }
           // Body of of Algorithm
           let rule: Rule = (split.desiredAttribute.type === Type.CATEGORICAL)
-              ? new CategoricalRule(split.desiredAttribute)
-              : new NumericRule(split.desiredAttribute, split.splitValue);
+              ? new CategoricalRule(split.desiredAttribute, condition)
+              : new NumericRule(split.desiredAttribute, split.splitValue, condition);
           parent.rule = rule;
           const subLists = rule.split(list);
-          subLists.forEach((a) => {
-              if (a.length > 0) {
+          subLists.forEach((subList, key) => {
+              if (subList.length > 0) {
                   const b = new DecisionTree(null, null, parent);
                   parent.addChild(b);
-                  return this.buildDecisionTree(a, this._dataSet.attributes, this._dataSet.target, b);
+                  return this.buildDecisionTree(subList, this._dataSet.attributes, this._dataSet.target, b, key);
               }
           });
     }
