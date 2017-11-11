@@ -32,4 +32,19 @@ export class NumericRule {
         const prepend = (this._condition) ? `Condition: ${this._condition}, ` : ``;
         return `${prepend}Split on Numeric Attribute: ${this._attribute.name}, Value - ${this._threshold}`;
     }
+
+    public classify(instance: Instance): number {
+        if (parseFloat(instance.getAttributeValue(this._attribute.name)) <= this._threshold) {
+            return 0;
+        }
+        return 1;
+    }
+
+    public get condition() {
+        return this._condition;
+    }
+
+    public get splitMap() {
+        return this._splitMap;
+    }
 }

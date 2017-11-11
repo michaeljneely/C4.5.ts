@@ -14,21 +14,21 @@ export class C45 {
     public train(list: Array<Instance> = this._dataSet.trainingInstances, target: Attribute = this._dataSet.target) {
         this.buildDecisionTree(list, this._dataSet.attributes, target, this._decisionTree);
         this.displayTree();
-        this.test();
-        this.report();
     }
 
-    // TODO
-    private report(): void {
-        return;
+    public test(): number {
+        console.log(`Testing ${this._dataSet.testingInstances.length} Instances`);
+        this._dataSet.testingInstances.forEach((instance) => {
+            return this._decisionTree.classify(instance);
+        });
+        return this.report();
     }
 
-    // TODO
-    private test(): void {
-        return;
+    private report(): number {
+        console.log(`Correctly Classifed ${this._decisionTree.report()} out of ${this._dataSet.testingInstances.length} instances`);
+        return this._decisionTree.report() / this._dataSet.testingInstances.length;
     }
 
-    // TODO
     private displayTree(): void {
         return this._decisionTree.print();
     }

@@ -27,4 +27,16 @@ export class CategoricalRule {
         const prepend = (this._condition) ? `Condition: ${this._condition}, ` : ``;
         return `${prepend}Split on Categorical Attribute: ${this._attribute.name}`;
     }
+
+    public get attribute() {
+        return this._attribute;
+    }
+
+    public get condition() {
+        return this._condition;
+    }
+
+    public get splitMap() {
+        return this._splitMap;
+    }
 }
