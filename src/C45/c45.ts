@@ -11,29 +11,29 @@ export class C45 {
         this._decisionTree = new DecisionTree(null, null, null);
     }
 
-    public train(list: Array<Instance> = this._dataSet.instances, target: Attribute = this._dataSet.target) {
-        this.buildDecisionTree(this._dataSet.instances, this._dataSet.attributes, target, this._decisionTree);
+    public train(list: Array<Instance> = this._dataSet.trainingInstances, target: Attribute = this._dataSet.target) {
+        this.buildDecisionTree(list, this._dataSet.attributes, target, this._decisionTree);
         this.displayTree();
-        this.test();
-        this.report();
     }
 
-    // TODO
-    private report(): void {
-        return;
+    public test(): number {
+        console.log(`Testing ${this._dataSet.testingInstances.length} Instances`);
+        this._dataSet.testingInstances.forEach((instance) => {
+            return this._decisionTree.classify(instance);
+        });
+        return this.report();
     }
 
-    // TODO
-    private test(): void {
-        return;
+    private report(): number {
+        console.log(`Correctly Classifed ${this._decisionTree.report()} out of ${this._dataSet.testingInstances.length} instances`);
+        return this._decisionTree.report() / this._dataSet.testingInstances.length;
     }
 
-    // TODO
     private displayTree(): void {
-        return;
+        return this._decisionTree.print();
     }
 
-    private buildDecisionTree(list: Array<Instance>, attributes: Array<Attribute>, target: Attribute, parent: DecisionTree) {
+    private buildDecisionTree(list: Array<Instance>, attributes: Array<Attribute>, target: Attribute, parent: DecisionTree, condition?: string) {
           // Base Zero: If the list is empty we are done
           if (list.length === 0) {
               return;
@@ -41,7 +41,7 @@ export class C45 {
           // Base One: If all belong to same class, declare new PredictionRule Leaf
           const baseOne = this._dataSet.unanimousClass(list, target);
           if (baseOne !== 'false') {
-              parent.rule = new PredictionRule(target, baseOne);
+              parent.rule = new PredictionRule(target, condition, baseOne, list);
               return;
           }
           // For each attribute a, find the normalized information gain ratio from splitting on a.
@@ -49,20 +49,20 @@ export class C45 {
           const split = this.chooseSplitAttribute(list, attributes, target);
           // Base Two: If 0 InformationGain => declare new Prediction Rule Leaf with majority class
           if (!split.desiredAttribute) {
-              parent.rule = new PredictionRule(target, this._dataSet.majorityClass(list, target));
+              parent.rule = new PredictionRule(target, condition, this._dataSet.majorityClass(list, target), list);
               return;
           }
           // Body of of Algorithm
           let rule: Rule = (split.desiredAttribute.type === Type.CATEGORICAL)
-              ? new CategoricalRule(split.desiredAttribute)
-              : new NumericRule(split.desiredAttribute, split.splitValue);
+              ? new CategoricalRule(split.desiredAttribute, condition)
+              : new NumericRule(split.desiredAttribute, split.splitValue, condition);
           parent.rule = rule;
           const subLists = rule.split(list);
-          subLists.forEach((a) => {
-              if (a.length > 0) {
+          subLists.forEach((subList, key) => {
+              if (subList.length > 0) {
                   const b = new DecisionTree(null, null, parent);
                   parent.addChild(b);
-                  return this.buildDecisionTree(a, this._dataSet.attributes, this._dataSet.target, b);
+                  return this.buildDecisionTree(subList, this._dataSet.attributes, this._dataSet.target, b, key);
               }
           });
     }

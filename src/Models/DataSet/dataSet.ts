@@ -3,6 +3,7 @@ import {homedir} from 'os';
 import {join} from 'path';
 import {Entropy} from '../../Calculations/Entropy';
 import {IGain, InformationGain} from '../../Calculations/InformationGain';
+import {shuffleArray} from '../../Utils';
 import {Attribute} from '../Attribute';
 import {Instance} from '../Instance';
 import {ISchema} from '../Schema';
@@ -12,22 +13,34 @@ export class DataSet {
 
     private _attributes: Array<Attribute>;
     private _instances: Array<Instance>;
+    private _training: Array<Instance>;
+    private _testing: Array<Instance>;
     private _target: Attribute;
-    private _valueMap: Map<Attribute, Array<Instance>>;
+    private _testingValueMap: Map<Attribute, Array<Instance>>;
+    private _trainingValueMap: Map<Attribute, Array<Instance>>;
 
-    constructor(dataPath: string, schemaPath: string, target: string) {
+    constructor(dataPath: string, schemaPath: string, target: string, percentageSplit: number) {
+        if (percentageSplit < 0 || percentageSplit > 100) {
+            throw new TypeError('Percentage Split must be between 0 and 100');
+        }
         this._attributes = this.initializeAttributeList(schemaPath);
         this._instances = this.initializeInstanceList(dataPath);
+        this.splitData(this._instances, percentageSplit);
         this.setUniqueValues();
         this.setValues();
         this._target = this.setTarget(target);
         this.stripTarget();
-        this._valueMap = new Map<Attribute, Array<Instance>>();
+        this._testingValueMap = new Map<Attribute, Array<Instance>>();
+        this._trainingValueMap = new Map<Attribute, Array<Instance>>();
         this.sortInstances();
     }
 
-    public getInstancesSortedByAttribute(attribute: Attribute): Array<Instance> {
-        return this._valueMap.get(attribute);
+    public getTestingInstancesSortedByAttribute(attribute: Attribute): Array<Instance> {
+        return this._testingValueMap.get(attribute);
+    }
+
+    public getTrainingInstancesSortedByAttribute(attribute: Attribute): Array<Instance> {
+        return this._trainingValueMap.get(attribute);
     }
 
     public sortListByAttribute(list: Array<Instance>, attribute: Attribute) {
@@ -97,29 +110,48 @@ export class DataSet {
 
     private setUniqueValues(): void {
         this._attributes.forEach((attribute: Attribute) => {
-            attribute.setUniqueValues(this._instances);
+            attribute.setUniqueValues(this._testing);
+            attribute.setUniqueValues(this._training);
         });
     }
 
     private setValues(): void {
         this._attributes.forEach((attribute: Attribute) => {
-            attribute.setValues(this._instances);
+            attribute.setUniqueValues(this._testing);
+            attribute.setUniqueValues(this._training);
         });
     }
 
     private sortInstances(): void {
         this._attributes.forEach((attribute: Attribute) => {
-            this._valueMap.set(attribute, this.sortInstanceByAttribute(attribute));
+            this._testingValueMap.set(attribute, this.sortTestingInstancesByAttribute(attribute));
+            this._trainingValueMap.set(attribute, this.sortTrainingInstancesByAttribute(attribute));
         });
     }
 
-    private sortInstanceByAttribute(attribute: Attribute): Array<Instance> {
-        const sortedInstances = this._instances.slice();
+    private sortTestingInstancesByAttribute(attribute: Attribute): Array<Instance> {
+        const sortedInstances = this._testing.slice();
         if (attribute.type === Type.CATEGORICAL) {
             return sortedInstances.sort(Instance.categoricalComparator(attribute));
         } else {
             return sortedInstances.sort(Instance.numericComparator(attribute));
         }
+    }
+
+    private sortTrainingInstancesByAttribute(attribute: Attribute): Array<Instance> {
+        const sortedInstances = this._training.slice();
+        if (attribute.type === Type.CATEGORICAL) {
+            return sortedInstances.sort(Instance.categoricalComparator(attribute));
+        } else {
+            return sortedInstances.sort(Instance.numericComparator(attribute));
+        }
+    }
+
+    private splitData(list: Array<Instance>, percentageSplit: number): void {
+        const splitPoint = Math.floor(((list.length * percentageSplit) / 100));
+        list = shuffleArray(list);
+        this._training = list.slice(0, splitPoint);
+        this._testing = list.slice(splitPoint, list.length);
     }
 
     public get attributes(): Array<Attribute> {
@@ -128,6 +160,14 @@ export class DataSet {
 
     public get instances(): Array<Instance> {
         return this._instances;
+    }
+
+    public get trainingInstances(): Array<Instance> {
+        return this._training;
+    }
+
+    public get testingInstances(): Array<Instance> {
+        return this._testing;
     }
 
     public get target(): Attribute {
