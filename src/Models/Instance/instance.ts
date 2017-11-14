@@ -55,6 +55,10 @@ export class Instance {
     public get number(): number {
         return this._number;
     }
+
+    public get data(): InstanceAttributeMap {
+        return this._data;
+    }
 }
 
 export type InstanceAttributeMap = Map<string, any>;

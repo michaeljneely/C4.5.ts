@@ -11,6 +11,9 @@ import {Type} from '../Type';
 
 export class DataSet {
 
+    private _dataPath: string;
+    private _schemaPath: string;
+    private _percentageSplit: number;
     private _attributes: Array<Attribute>;
     private _instances: Array<Instance>;
     private _training: Array<Instance>;
@@ -23,6 +26,9 @@ export class DataSet {
         if (percentageSplit < 0 || percentageSplit > 100) {
             throw new TypeError('Percentage Split must be between 0 and 100');
         }
+        this._dataPath = join(homedir(), dataPath);
+        this._schemaPath = join(homedir(), schemaPath);
+        this._percentageSplit = percentageSplit;
         this._attributes = this.initializeAttributeList(schemaPath);
         this._instances = this.initializeInstanceList(dataPath);
         this.splitData(this._instances, percentageSplit);
@@ -82,14 +88,14 @@ export class DataSet {
     }
 
     private initializeAttributeList(schemaPath: string): Array<Attribute> {
-        const rawSchema = JSON.parse(readFileSync(join(homedir(), schemaPath), 'utf8')) as ISchema;
+        const rawSchema = JSON.parse(readFileSync(this._schemaPath, 'utf8')) as ISchema;
         return rawSchema.attributes.map((attribute: Attribute) => {
             return new Attribute(attribute.name, attribute.type);
         });
     }
 
     private initializeInstanceList(dataPath: string): Array<Instance> {
-        const rawInstances = readFileSync(join(homedir(), dataPath), 'utf8').replace(/[\r]/g, '').trim().split('\n');
+        const rawInstances = readFileSync(this._dataPath, 'utf8').replace(/[\r]/g, '').trim().split('\n');
         return rawInstances.map((instance: string) => {
             return new Instance(instance, this._attributes);
         });
@@ -172,6 +178,14 @@ export class DataSet {
 
     public get target(): Attribute {
         return this._target;
+    }
+
+    public get dataPath(): string {
+        return this._dataPath;
+    }
+
+    public get percentageSplit(): number {
+        return this._percentageSplit;
     }
 
 }

@@ -2,9 +2,9 @@ import {Attribute, Instance} from '../';
 
 export class PredictionRule {
 
+    public _label: string;
     private _target: Attribute;
     private _condition: string;
-    private _label: string;
     private _instances: Array<Instance>;
     private _splitMap: any;
 
@@ -38,5 +38,9 @@ export class PredictionRule {
 
     public get condition() {
         return this._condition;
+    }
+
+    public get label() {
+        return this._label;
     }
 }

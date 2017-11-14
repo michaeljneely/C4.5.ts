@@ -42,6 +42,10 @@ export class DecisionTree {
         this._parent = parent;
     }
 
+    public get numCorrect(): number {
+        return this._numCorrect;
+    }
+
     public height(root: DecisionTree = this): number {
         let subHeights = new Array<number>();
         if (root === null) {
@@ -53,37 +57,38 @@ export class DecisionTree {
         return (subHeights.sort().pop() || 0) + 1;
     }
 
-    public print(level: number = 0) {
+    public print(level: number = 0): string {
         let prepend: string = '';
+        let output: string = '';
         for (let i = 0; i < level; i++) {
             prepend += '------';
         }
-        console.log(prepend + (this._rule.print()));
+        output += ('\n\r' + prepend + this._rule.print());
         this.children.forEach((child) => {
-            child.print(level + 1);
+            output += child.print(level + 1);
         });
+        return output;
     }
 
-    public classify(instance: Instance, numCorrect: number = 0): any {
+    public classify(instance: Instance): string {
         if (this._rule instanceof PredictionRule) {
             if (this._rule.classify(instance)) {
-                console.log('correct!');
                 this._numCorrect++;
-            } else {
-                console.log('incorrect!');
             }
+            return this._rule.label;
         } else if (this._rule instanceof NumericRule) {
             const nextChild = this._rule.classify(instance);
             return this._children[nextChild].classify(instance);
         } else if (this._rule instanceof CategoricalRule) {
             const value  = instance.getAttributeValue(this._rule.attribute.name);
-            this._children.forEach((child) => {
-                if (child._rule.condition === value) {
-                    return child.classify(instance);
-                }
+            const desiredChild = this._children.find((child) => {
+                return child._rule.condition === value;
             });
+            if (!desiredChild) {
+                throw new Error('impossible!');
+            }
+            return desiredChild.classify(instance);
         }
-        return;
     }
 
     public report(root: DecisionTree = this, numCorrect: Array<number> = []): number {
@@ -93,6 +98,7 @@ export class DecisionTree {
                 return child.report(child, numCorrect);
             });
         }
+        this._numCorrect = 0;
         return numCorrect.reduce((sum, value) => {
             return sum + value;
         });

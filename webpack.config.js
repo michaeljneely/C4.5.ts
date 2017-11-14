@@ -14,9 +14,7 @@ module.exports = function(env) {
     resolve: {
       extensions: ['.ts', '.js']
     },
-    node: {
-      fs: 'empty'
-    },
+    target: 'node',
     output: {
       filename: filename,
       path: path.resolve(__dirname, 'dist'),

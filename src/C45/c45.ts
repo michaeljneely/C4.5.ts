@@ -1,14 +1,18 @@
 import {Entropy, InformationGain} from '../Calculations';
-import {Attribute, CategoricalRule, DataSet, DecisionTree, Instance, NumericRule, PredictionRule, Rule, Type} from '../Models';
+import {Attribute, CategoricalRule, DataSet, DecisionTree, Instance, InstanceAttributeMap, NumericRule, PredictionRule, Rule, Type} from '../Models';
 
 export class C45 {
 
     private _dataSet: DataSet;
     private _decisionTree: DecisionTree;
+    private _results: Array<ITestResult>;
+    private _numCorrect: number;
+    private _accuracy: number;
 
     constructor(dataSet: DataSet) {
         this._dataSet = dataSet;
         this._decisionTree = new DecisionTree(null, null, null);
+        this._results = new Array<ITestResult>();
     }
 
     public train(list: Array<Instance> = this._dataSet.trainingInstances, target: Attribute = this._dataSet.target) {
@@ -16,21 +20,32 @@ export class C45 {
         this.displayTree();
     }
 
-    public test(): number {
-        console.log(`Testing ${this._dataSet.testingInstances.length} Instances`);
+    public test(): Array<ITestResult> {
+        const results = new Array<ITestResult>();
         this._dataSet.testingInstances.forEach((instance) => {
-            return this._decisionTree.classify(instance);
+            const predicted = this._decisionTree.classify(instance);
+            const actual = instance.getAttributeValue(this._dataSet.target.name);
+            results.push({instance, predicted, actual});
         });
-        return this.report();
+        this._numCorrect = this._decisionTree.report();
+        this._accuracy = this._numCorrect / this.dataSet.testingInstances.length;
+        return results;
     }
 
-    private report(): number {
-        console.log(`Correctly Classifed ${this._decisionTree.report()} out of ${this._dataSet.testingInstances.length} instances`);
-        return this._decisionTree.report() / this._dataSet.testingInstances.length;
-    }
-
-    private displayTree(): void {
+    public displayTree(): string {
         return this._decisionTree.print();
+    }
+
+    public get dataSet(): DataSet {
+        return this._dataSet;
+    }
+
+    public get numCorrect(): number {
+        return this._numCorrect;
+    }
+
+    public get accuracy(): number {
+        return this._accuracy;
     }
 
     private buildDecisionTree(list: Array<Instance>, attributes: Array<Attribute>, target: Attribute, parent: DecisionTree, condition?: string) {
@@ -100,4 +115,10 @@ export class C45 {
 export interface ISelectedAttribute {
     desiredAttribute: Attribute;
     splitValue: number;
+}
+
+export interface ITestResult {
+    instance: Instance;
+    predicted: string;
+    actual: string;
 }
