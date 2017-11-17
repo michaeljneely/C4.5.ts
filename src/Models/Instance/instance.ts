@@ -3,6 +3,13 @@ import {Type} from '../Type';
 
 export class Instance {
 
+    /**
+     * Compare Two Instances Using a Categorical Attribute
+     *
+     * @param {Attribute} attribute Specified categorical attribute
+     * @returns {number} 1 -> Instance A is greater than B, -1 -> A is less than B, 0 -> A equals B
+     *
+     */
     public static categoricalComparator = (attribute: Attribute) => {
         return (i1: Instance, i2: Instance): number => {
             const val1 = i1.getAttributeValue(attribute.name) as string;
@@ -11,10 +18,17 @@ export class Instance {
         };
     }
 
+    /**
+     * Compare Two Instances Using a Numeric Attribute
+     *
+     * @param {Attribute} attribute Specified numeric attribute
+     * @returns {number} 1 -> Instance A is greater than B, -1 -> A is less than B, 0 -> A equals B
+     *
+     */
     public static numericComparator = (attribute: Attribute) => {
         return (i1: Instance, i2: Instance): number => {
-            const val1 = parseFloat(i1.getAttributeValue(attribute.name));
-            const val2 = parseFloat(i2.getAttributeValue(attribute.name));
+            const val1: number = parseFloat(i1.getAttributeValue(attribute.name));
+            const val2: number = parseFloat(i2.getAttributeValue(attribute.name));
             if (val1 > val2) {
                 return 1;
             } else if (val1 < val2) {
@@ -36,11 +50,19 @@ export class Instance {
         Instance._nextInstanceNumber++;
     }
 
+    /**
+     * Initialize an Instance
+     *
+     * @param {string} data Data from file
+     * @param {Array<Attribute>} attributes List of attributes
+     * @returns {InstanceAttributeMap} (Attribute, Value) map
+     *
+     */
     public initializeInstance(data: string, attributes: Array<Attribute>): InstanceAttributeMap {
-        const instanceMap = new Map<string, any>();
+        const instanceMap: Map<string, any> = new Map<string, any>();
         const values: Array<string> = data.split(',').filter(Boolean); // only include truthy values
         if (values.length !== attributes.length) {
-            throw new TypeError('Number Of Attributes Does Not Match Values in Row');
+            throw new RangeError('Number Of Attributes Does Not Match Values in Row');
         }
         for (let i = 0; i < values.length; i++) {
             instanceMap.set(attributes[i].name, values[i]);

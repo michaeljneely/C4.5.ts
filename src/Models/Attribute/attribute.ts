@@ -3,6 +3,50 @@ import {Type} from '../Type';
 
 export class Attribute {
 
+    /**
+     * Get the Number of Instances in a List with a Specified Attribute Value
+     *
+     * @param {Array<Instance>} list The list of instances
+     * @param {Attribute} attribute Specified attribute
+     * @param {any} value Specified attribute value
+     * @returns {number} Number of instances with that attribute value
+     *
+     */
+    public static getNumInstancesWithAttributeValue(list: Array<Instance>, attribute: Attribute, value: any): number {
+        const found: Array<Instance> = list.filter((instance: Instance) => {
+            let instanceValue: any = instance.getAttributeValue(attribute.name);
+            if (attribute.type === Type.CATEGORICAL) {
+                instanceValue = instanceValue.toString();
+                value = value.toString();
+            } else {
+                instanceValue = parseFloat(instanceValue);
+                value = parseFloat(value);
+            }
+            return instanceValue === value;
+        });
+        return found.length;
+    }
+
+    /**
+     * Calculates the Candidate Split Points on a List of Instances Sorted by Particular Attributes Values
+     *
+     * @param {Array<Instance>} list The list of instances
+     * @param {Attribute} attribute Specified attribute
+     * @returns {Array<number>} Array of candidate split values
+     *
+     */
+    public static candidateSplitValues(list: Array<Instance>, attribute: Attribute): Array<number> {
+        const candidateSplits: Array<number> = new Array<number>();
+        for (let i: number = 0; i < list.length - 1; i++) {
+            const val1: number = parseFloat(list[i].getAttributeValue(attribute.name));
+            const val2: number = parseFloat(list[i + 1].getAttributeValue(attribute.name));
+            if (val1 !== val2) {
+                candidateSplits.push(i);
+            }
+        }
+        return candidateSplits;
+    }
+
     private _name: string;
     private _type: Type;
     private _values: Array<any>;
@@ -35,35 +79,55 @@ export class Attribute {
         return this._values;
     }
 
-    public setUniqueValues(list: Array<Instance>): void {
+    /**
+     * Add Unique Values from a List of Instances to the Attribute's Unique Value List
+     *
+     * @param {Array<Instance>} list The list of instances
+     *
+     */
+    public addUniqueValues(list: Array<Instance>): void {
         list.forEach((instance: Instance) => {
             this.addValue(instance.getAttributeValue(this._name));
         });
     }
 
+    /**
+     * See if a Particular Value is Unique for the Attribute
+     *
+     * @param {any} value Specified values
+     * @returns {boolean} True or False
+     *
+     */
     public isUniqueValue(value: any): boolean {
         return (this._uniqueValues.indexOf(value) === -1) as boolean;
     }
 
-    public addValue(value: any): void {
+    /**
+     * Add Value to an Attribute's Unique Value List if Possible and Maintain Sort
+     *
+     * @param {any} value Specified value
+     *
+     */
+    private addValue(value: any): void {
         if (this.isUniqueValue(value)) {
             this._uniqueValues.push(value);
             if (this._type === Type.NUMERIC) {
-                this._uniqueValues.sort(this.numericSort);
+                this._uniqueValues.sort(this.numericComparator);
             } else {
                 this._uniqueValues.sort();
             }
         }
     }
 
-    public setValues(list: Array<Instance>): void {
-        list.forEach((instance: Instance) => {
-            this._values.push(instance.getAttributeValue(this._name));
-        });
-        this._values.sort(this.numericSort);
-    }
-
-    private numericSort(a: number, b: number): number {
+    /**
+     * Numeric Comparator for Sorting
+     *
+     * @param {number} a First number
+     * @param {number} a Second number
+     * @returns {number} 1 -> A is greater than B, -1 -> A is less than B, 0 -> A equals B
+     *
+     */
+    private numericComparator(a: number, b: number): number {
         if (a > b) {
             return 1;
         } else if (a < b) {
@@ -71,7 +135,4 @@ export class Attribute {
         }
         return 0;
     }
-
-    // Categorical Sort is standard string sort
-
 }

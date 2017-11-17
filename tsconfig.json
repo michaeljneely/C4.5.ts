@@ -2,17 +2,12 @@
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
+    "outDir": "dist",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "declaration": true,
-    "declarationDir": "./",
-    "target": "es5",
-    "lib": [
-      "dom",
-      "es6"
-    ],
+    "target": "es6",
     "typeRoots": [
       "./node_modules/@types"
     ]

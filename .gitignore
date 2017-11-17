@@ -16,6 +16,7 @@ pids
 # Coverage #
 coverage/
 .coveralls.yml
+.nyc_output
 
 # Compiled binary addons #
 build/
