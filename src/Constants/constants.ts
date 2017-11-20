@@ -1,12 +1,16 @@
 export class Constants {
 
-    // Minimum of two instances necessary per leaf
-    public static minInstancesPerLeaf = 2;
+    /* Enforce a minimum number of instances that must reach a leaf
+    node during training to preserve the leaf */
+    // Default: False
+    public static useMinInstancePruning: boolean = false;
 
-    // Default 30%
-    public static pruningSplit: number = 30;
+    // Minimum of X instances necessary per leaf
+    // Default: 2
+    public static minInstancesPerLeaf: number = 2;
 
-    // Using z=0.69 for 75-th percentile estimate
-    public static confidenceLevel: number = 0.69;
+    // Z-value for confidence interval calculations
+    // Default: Using z=0.69 for 75-th percentile estimate
+    public static zValue: number = 0.69;
 
 }
