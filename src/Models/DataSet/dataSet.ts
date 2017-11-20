@@ -2,6 +2,7 @@ import {readFileSync} from 'fs-extra';
 import {homedir} from 'os';
 import {resolve} from 'path';
 import {Entropy, IGain, InformationGain} from '../../Calculations/';
+import {Constants} from '../../Constants/';
 import {shuffleArray} from '../../Utils';
 import {Attribute} from '../Attribute';
 import {Instance} from '../Instance';
@@ -147,9 +148,11 @@ export class DataSet {
      */
     private initializeInstanceList(dataPath: string): Array<Instance> {
         const rawInstances: Array<string> = readFileSync(this._dataPath, 'utf8').replace(/[\r]/g, '').trim().split('\n');
-        return rawInstances.map((instance: string) => {
+        const instances = rawInstances.map((instance: string) => {
             return new Instance(instance, this._attributes);
         });
+        Instance._nextInstanceNumber = 0;
+        return instances;
     }
 
     /**
@@ -222,10 +225,11 @@ export class DataSet {
      *
      */
     private splitData(list: Array<Instance>, percentageSplit: number): void {
-        const splitPoint: number = Math.floor(((list.length * percentageSplit) / 100));
         list = shuffleArray(list);
-        this._training = list.slice(0, splitPoint);
-        this._testing = list.slice(splitPoint, list.length);
+        const trainTestSplit: number = Math.floor(((list.length * percentageSplit) / 100));
+        const trainingList: Array<Instance> = list.slice(0, trainTestSplit);
+        this._testing = list.slice(trainTestSplit, list.length);
+        this._training = trainingList.slice(0, trainingList.length);
     }
 
     public get attributes(): Array<Attribute> {

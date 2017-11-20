@@ -6,12 +6,14 @@ export class DecisionTree {
     private _children: Array<DecisionTree>;
     private _parent: DecisionTree;
     private _numCorrect: number;
+    private _numWrong: number;
 
     constructor(rule?: Rule, children?: Array<DecisionTree>, parent?: DecisionTree) {
         this._rule = rule || null;
         this._children = children || new Array<DecisionTree>();
         this._parent = parent || null;
         this._numCorrect = 0;
+        this._numWrong = 0;
     }
 
     /**
@@ -25,7 +27,7 @@ export class DecisionTree {
     }
 
     /**
-     * Get the Height of the DEcision Tree
+     * Get the Height of the Decision Tree
      *
      * @param {DecisionTree} root The decision tree you are calculating the height of
      * @returns {number} The height
@@ -56,9 +58,11 @@ export class DecisionTree {
             prepend += '------';
         }
         output += ('\n\r' + prepend + this._rule.print());
-        this.children.forEach((child: DecisionTree) => {
-            output += child.print(level + 1);
-        });
+        if (this.children) {
+            this.children.forEach((child: DecisionTree) => {
+                output += child.print(level + 1);
+            });
+        }
         return output;
     }
 
@@ -73,7 +77,10 @@ export class DecisionTree {
         if (this._rule instanceof PredictionRule) {
             if (this._rule.classify(instance)) {
                 this._numCorrect++;
+            } else  {
+                this._numWrong++;
             }
+            this._rule.addInstance(instance);
             return this._rule.label;
         } else if (this._rule instanceof NumericRule) {
             const nextChild = this._rule.classify(instance);
@@ -102,8 +109,46 @@ export class DecisionTree {
                 return child.report(child, numCorrect);
             });
         }
-        this._numCorrect = 0;
         return numCorrect.reduce((sum: number, value: number) => {
+            return sum + value;
+        });
+    }
+
+    /**
+     * Reset All Instances Held By Nodes and Rules
+     *
+     * @param {DecisionTree} root Root of the decision tree
+     *
+     */
+    public reset(root: DecisionTree = this): void {
+        root._numWrong = 0;
+        root._numCorrect = 0;
+        if (root.rule instanceof PredictionRule) {
+            root.rule.instances = new Array<Instance>();
+        }
+        if (root.children) {
+            root.children.forEach((child: DecisionTree) => {
+                root.reset(child);
+            });
+        }
+    }
+
+    /**
+     * Recursive Algorithm to Count the Number of Nodes in the Decision Tree
+     *
+     * @param {DecisionTree} root Root of the decision tree
+     * @param {Array<number>} nodeCount Array to keep track of node counts
+     * @returns {number} Total nodes in the tree
+     *
+     */
+    public countNodes(root: DecisionTree = this, nodeCount: Array<number> = []): number {
+        nodeCount.push(1);
+        if (root.children) {
+            root.children.forEach((child: DecisionTree) => {
+                return child.countNodes(child, nodeCount);
+            });
+        }
+        return nodeCount.reduce((sum: number, value: number) => {
             return sum + value;
         });
     }
@@ -134,6 +179,10 @@ export class DecisionTree {
 
     public get numCorrect(): number {
         return this._numCorrect;
+    }
+
+    public get numWrong(): number {
+        return this._numWrong;
     }
 
 }

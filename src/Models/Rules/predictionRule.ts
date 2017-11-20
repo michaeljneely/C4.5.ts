@@ -20,14 +20,18 @@ export class PredictionRule {
         this._instances = instances;
     }
 
-    public predict() {
-        return this._label;
-    }
-
+    /**
+     * Print Out Information on this Rule
+     *
+     */
     public print (): string {
-      return `Condition: ${this._condition}, Choose: ${this._label}, Num Reaching: ${this._instances.length}`;
+      return `Condition: ${this._condition}, Choose: ${this._label} ${this.results()}`;
     }
 
+    /**
+     * Classify an Instance
+     *
+     */
     public classify(instance: Instance): boolean {
         return (this._label === instance.getAttributeValue(this._target.name).toString());
     }
@@ -40,7 +44,41 @@ export class PredictionRule {
         return this._condition;
     }
 
+    public get attribute() {
+        return this._target;
+    }
+
     public get label() {
         return this._label;
+    }
+
+    public get instances() {
+        return this._instances;
+    }
+
+    public set instances(list: Array<Instance>) {
+        this._instances = list;
+    }
+
+    public addInstance(instance: Instance) {
+        this._instances.push(instance);
+    }
+
+    /**
+     * Get a String Representation of the Rule's Performance
+     * @returns {string} (correct / incorrect)
+     *
+     */
+    private results(): string {
+        let numRight = 0;
+        let numWrong = 0;
+        this._instances.forEach((instance: Instance) => {
+            if (this.classify(instance)) {
+                numRight++;
+            } else {
+                numWrong++;
+            }
+        });
+        return `(${numRight}/${numWrong})`;
     }
 }

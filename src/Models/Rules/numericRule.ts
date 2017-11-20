@@ -16,6 +16,13 @@ export class NumericRule {
         this._splitMap.set(`greaterThan: ${threshold}`, new Array<Instance>());
     }
 
+    /**
+     * Split Instances on the Specified Threshold of the Numeric Attribute
+     *
+     * @param {Array<Instance>} list List of instances
+     * @returns {Map<string, Array<Instance>>} Map of unique values to instance sublists
+     *
+     */
     public split(list: Array<Instance>): Map<string, Array<Instance>> {
         list.forEach((instance) => {
             const value = parseFloat(instance.getAttributeValue(this._attribute.name));
@@ -28,6 +35,10 @@ export class NumericRule {
         return this._splitMap;
     }
 
+    /**
+     * Print Out Information on this Rule
+     *
+     */
     public print (): string {
         const prepend = (this._condition) ? `Condition: ${this._condition}, ` : ``;
         return `${prepend}Split on Numeric Attribute: ${this._attribute.name}, Value - ${this._threshold}`;
@@ -46,5 +57,9 @@ export class NumericRule {
 
     public get splitMap() {
         return this._splitMap;
+    }
+
+    public get attribute() {
+        return this._attribute;
     }
 }

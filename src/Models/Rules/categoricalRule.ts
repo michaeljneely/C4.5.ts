@@ -15,6 +15,13 @@ export class CategoricalRule {
         });
     }
 
+    /**
+     * Split Instances on the Categorical Attribute
+     *
+     * @param {Array<Instance>} list List of instances
+     * @returns {Map<string, Array<Instance>>} Map of unique values to instance sublists
+     *
+     */
     public split(list: Array<Instance>): Map<string, Array<Instance>> {
         list.forEach((instance) => {
             const value = instance.getAttributeValue(this._attribute.name).toString();
@@ -23,6 +30,10 @@ export class CategoricalRule {
         return this._splitMap;
     }
 
+    /**
+     * Print Out Information on this Rule
+     *
+     */
     public print(): string {
         const prepend = (this._condition) ? `Condition: ${this._condition}, ` : ``;
         return `${prepend}Split on Categorical Attribute: ${this._attribute.name}`;

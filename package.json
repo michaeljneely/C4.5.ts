@@ -26,9 +26,7 @@
     "release:patch": "npm run clean && npm version patch",
     "release:minor": "npm run clean && npm version minor",
     "release:major": "npm run clean && npm version major",
-    "sample": "ts-node sample",
-    "test": "nyc mocha",
-    "trial": "ts-node test/trial"
+    "test": "nyc mocha"
   },
   "nyc": {
     "include": [
@@ -49,20 +47,24 @@
     "sourceMap": true,
     "instrument": true
   },
-  "dependencies": {},
+  "dependencies": {
+    "command-line-args": "^4.0.7",
+    "fs-extra": "^4.0.2",
+    "lodash": "^4.17.4"
+  },
   "devDependencies": {
     "coveralls": "^2.13.1",
     "nyc": "^11.3.0",
-    "ts-loader": "^2.0.1",
     "tslint": "^4.5.1",
-    "tslint-loader": "^3.5.2",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.2.1",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
-    "fs-extra": "^4.0.2",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.2.1",
     "@types/chai": "^3.4.35",
+    "@types/command-line-args": "^4.0.2",
     "@types/fs-extra": "^4.0.5",
+    "@types/lodash": "^4.14.85",
+    "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.31"
   }
 }
