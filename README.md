@@ -1,4 +1,4 @@
-#C4.5.ts
+# C4.5.ts
 
 :deciduous_tree: Ross Quinlan's C4.5 Decision Tree Algorithm<sup>[1](#references)</sup>, implemented in TypeScript. Handles Numeric (continuous) and Categorical (discrete) attributes. Uses the Information Gain Ratio to perform splits. Performs reduced error pruning based on confidence intervals.
 
@@ -42,7 +42,7 @@ C4.5 distinguishes between two types of attributes:
 Schemas are defined with a single `target` string and a list of `attributes` (`name` and `type` pairs).
 
 A sample schema is shown below:
-```
+```javascript
 {
     "target": "PlayGolf",
     "attributes": [
@@ -70,7 +70,7 @@ A sample schema is shown below:
 }
 ```
 ## Constructing a DataSet
-```
+```javascript
 const myDataSet = new DataSet('test/tennis.csv', 'test/tennis-schema.json', 70);
 ```
 The `DataSet` class takes 3 arguments:
@@ -79,7 +79,7 @@ The `DataSet` class takes 3 arguments:
 * The split percentage you wish to use for training and testing the decision tree. (e.g. `66` indicates 66% of the data is used for training, and the remaining 33% is used for testing)
 
 ## Constructing a Decision Tree
-```
+```javascript
 const myC45 = new C45(myDataSet);
 ```
 The `C45` class takes 1 argument: the dataset you wish to build a decision tree for.
@@ -89,7 +89,7 @@ Once instantiated, you can call the following methods:
 * `C45.test()` - Validates the tree against the withheld test data.
 
 ## Visualizing the Results
-```
+```javascript
 const myVisualizer = new Display('mytree', myC45);
 // Prints the Markdown file to 'results/mytree-tennis.md'
 myVisualizer.display();
