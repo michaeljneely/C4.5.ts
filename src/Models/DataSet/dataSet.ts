@@ -22,7 +22,7 @@ export class DataSet {
     private _testingValueMap: Map<Attribute, Array<Instance>>;
     private _trainingValueMap: Map<Attribute, Array<Instance>>;
 
-    constructor(dataPath: string, schemaPath: string, target: string, percentageSplit: number) {
+    constructor(dataPath: string, schemaPath: string, percentageSplit: number) {
         if (percentageSplit < 0 || percentageSplit > 100) {
             throw new RangeError('Percentage Split must be between 0 and 100');
         }
@@ -33,7 +33,6 @@ export class DataSet {
         this._instances = this.initializeInstanceList(dataPath);
         this.splitData(this._instances, percentageSplit);
         this.setUniqueValues();
-        this._target = this.setTarget(target);
         this.stripTarget();
         this._testingValueMap = new Map<Attribute, Array<Instance>>();
         this._trainingValueMap = new Map<Attribute, Array<Instance>>();
@@ -134,9 +133,11 @@ export class DataSet {
      */
     private initializeAttributeList(schemaPath: string): Array<Attribute> {
         const rawSchema: ISchema = JSON.parse(readFileSync(this._schemaPath, 'utf8')) as ISchema;
-        return rawSchema.attributes.map((attribute: Attribute) => {
+        const attributeList: Array<Attribute> = rawSchema.attributes.map((attribute: Attribute) => {
             return new Attribute(attribute.name, attribute.type);
         });
+        this._target = this.findTarget(rawSchema.target, attributeList);
+        return attributeList;
     }
 
     /**
@@ -148,7 +149,7 @@ export class DataSet {
      */
     private initializeInstanceList(dataPath: string): Array<Instance> {
         const rawInstances: Array<string> = readFileSync(this._dataPath, 'utf8').replace(/[\r]/g, '').trim().split('\n');
-        const instances = rawInstances.map((instance: string) => {
+        const instances: Array<Instance> = rawInstances.map((instance: string) => {
             return new Instance(instance, this._attributes);
         });
         Instance._nextInstanceNumber = 0;
@@ -156,14 +157,18 @@ export class DataSet {
     }
 
     /**
-     * Set the Target Attribute for the Data Set
+     * Find the Target Attribute in the List of Attributes
      *
      * @param {string} target Target attribute name
+     * @param {Array<Attribute>} attributes List of attriutes to extract the target from
      * @returns {Attribute} Target Attribute
      *
      */
-    private setTarget(target: string): Attribute {
-        const found: Attribute = this._attributes.find((attribute) => attribute.name === target);
+    private findTarget(target: string, attributes: Array<Attribute>): Attribute {
+        if (! attributes || attributes.length <= 0) {
+            throw new TypeError('No Arguments Specified To Extract the Target From!');
+        }
+        const found: Attribute = attributes.find((attribute: Attribute) => attribute.name === target);
         if (!found ) {
             throw new TypeError('Target Not Found in Attribute List');
         }
@@ -175,7 +180,7 @@ export class DataSet {
      *
      */
     private stripTarget(): void {
-        const index: number = this._attributes.findIndex((attr) => attr === this.target);
+        const index: number = this._attributes.findIndex((attr) => attr === this._target);
         this._attributes.splice(index, 1);
     }
 

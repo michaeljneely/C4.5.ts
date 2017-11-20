@@ -5,12 +5,12 @@ import {Attribute, DataSet} from '../Models/';
 
 export class Display {
 
-    private _prepend: string;
+    private _filePrefix: string;
     private _c45: C45;
     private _dataSet: DataSet;
 
-    constructor(prepend: string = 'out', c45: C45 ) {
-        this._prepend = prepend;
+    constructor(filePrefix: string = 'out', c45: C45 ) {
+        this._filePrefix = filePrefix;
         this._c45 = c45;
         this._dataSet = this._c45.dataSet;
     }
@@ -33,8 +33,8 @@ export class Display {
         + `Accuracy: ${(this._c45.accuracy * 100).toPrecision(4)}%\n\r`
         + `Instance Breakdown:\n\r\n\r`
         + `${this.buildResultTable()}`;
-        outputFileSync(`results/${this._prepend}-${basename(this._dataSet.dataPath).split('.')[0]}.md`, out);
-        return `results/${this._prepend}-${basename(this._dataSet.dataPath).split('.')[0]}.md`;
+        outputFileSync(`results/${this._filePrefix}-${basename(this._dataSet.dataPath).split('.')[0]}.md`, out);
+        return `results/${this._filePrefix}-${basename(this._dataSet.dataPath).split('.')[0]}.md`;
     }
 
     /**

@@ -35,11 +35,9 @@ export class C45 {
     /**
      * Prune - Trim Decision Tree with Reduced Error Pruning and (Optionlly) Minimum Instace Per Leaf Pruning
      *
-     * @param {boolean} minimumInstancePruning Require a minimum number of training instances to reach leaves (specified in constants file)
-     *
      */
-    public prune(minimumInstancePruning: boolean): void {
-        this.pruneDecisionTree(this._unPrunedTree, minimumInstancePruning);
+    public prune(): void {
+        this.pruneDecisionTree(this._unPrunedTree);
     }
 
     /**
@@ -157,13 +155,13 @@ export class C45 {
      * @param {boolean} minimumInstancePruning Require a minimum number of training instances to reach leaves (specified in constants file)
      *
      */
-    private pruneDecisionTree(root: DecisionTree = this._unPrunedTree, minimumInstancePruning: boolean): void {
+    private pruneDecisionTree(root: DecisionTree = this._unPrunedTree): void {
         this._prunedTree = cloneDeep(this._unPrunedTree);
         this._prunedTree.reset();
         this.test(this._dataSet.trainingInstances, this._prunedTree);
         this.reducedErrorPruning(this._prunedTree);
         this._prunedTree.reset();
-        if (minimumInstancePruning) {
+        if (Constants.useMinInstancePruning) {
             this.test(this._dataSet.trainingInstances, this._prunedTree);
             this.pruneMinInstancesPerLeaf(this._prunedTree);
             this._prunedTree.reset();
@@ -270,8 +268,8 @@ export class C45 {
       *
       */
      private confidenceInterval(f: number, n: number): number {
-        const p1: number = (f / n) + (Constants.confidenceLevel * Math.sqrt(((f / n) * (1 / (f / n))) / n));
-        const p2: number = (f / n) - (Constants.confidenceLevel * Math.sqrt(((f / n) * (1 / (f / n))) / n));
+        const p1: number = (f / n) + (Constants.zValue * Math.sqrt(((f / n) * (1 / (f / n))) / n));
+        const p2: number = (f / n) - (Constants.zValue * Math.sqrt(((f / n) * (1 / (f / n))) / n));
         return p1 > p2 ? p1 : p2;
      }
 
