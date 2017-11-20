@@ -3,6 +3,9 @@ import {Type} from '../Type';
 
 export class Instance {
 
+    // Keep track of instance numbers
+    public static _nextInstanceNumber: number = 0;
+
     /**
      * Compare Two Instances Using a Categorical Attribute
      *
@@ -38,8 +41,6 @@ export class Instance {
             }
         };
     }
-
-    private static _nextInstanceNumber: number = 0;
 
     private _data: InstanceAttributeMap;
     private _number: number;
