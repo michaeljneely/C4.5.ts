@@ -25,7 +25,6 @@ export class C45 {
      *
      * @param {Array<Instance>} list Training Instances
      * @param {Attribute} target Attribute to classify
-     * @returns {string} Predicted classification
      *
      */
     public train(list: Array<Instance> = this._dataSet.trainingInstances, target: Attribute = this._dataSet.target): void {

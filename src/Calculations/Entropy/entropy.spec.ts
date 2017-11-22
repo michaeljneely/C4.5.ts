@@ -5,8 +5,8 @@ import { Entropy } from './entropy';
 
 describe('Entropy Calculation Tests', () => {
 
-    const tennisDataSet = new DataSet('test/tennis.csv', 'test/tennis-schema.json', 'PlayTennis', 100);
-    const owlsDataSet = new DataSet('test/owls15.csv', 'test/owls15-schema.json', 'type', 100);
+    const tennisDataSet = new DataSet('test/tennis.csv', 'test/tennis-schema.json', 100);
+    const owlsDataSet = new DataSet('test/owls15.csv', 'test/owls15-schema.json', 100);
     const instances = tennisDataSet.instances;
     const windy = tennisDataSet.attributes[3];
     const wingWidth = owlsDataSet.attributes[3];
