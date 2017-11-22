@@ -32,7 +32,7 @@ export class C45 {
     }
 
     /**
-     * Prune - Trim Decision Tree with Reduced Error Pruning and (Optionlly) Minimum Instace Per Leaf Pruning
+     * Prune - Trim Decision Tree with Reduced Error Pruning and (Optionally) Minimum Instance Per Leaf Pruning
      *
      */
     public prune(): void {
