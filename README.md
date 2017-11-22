@@ -241,7 +241,7 @@ ts-node test/trial -d owls15 -s owls15-schema -p 66 -n 1000
 ```
 The 'test/' folder contains a command line script to run multiple C4.5 trials. It will output the results of each trial to the console and print the highest performing Decision Tree to a markdown file (`[number of trials]-trials-best-[filename].md`).
 
-`Trial.ts` accepts the following argument:
+`Trial.ts` accepts the following arguments:
 * `-d` or `--dataFile` - The name of your `.csv` data file in the `test/` folder.
 * `-s` or `--schemaFile` - The name of your `.json` schema file in the `test/` folder.
 * `-p` or `--percentageSplit` - The train/test split you wish to use. Default value is 66%.

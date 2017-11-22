@@ -32,7 +32,7 @@ export class Attribute {
      *
      * @param {Array<Instance>} list The list of instances
      * @param {Attribute} attribute Specified attribute
-     * @returns {Array<number>} Array of candidate split values
+     * @returns {Array<number>} Array of candidate split indices
      *
      */
     public static candidateSplitValues(list: Array<Instance>, attribute: Attribute): Array<number> {

@@ -6,12 +6,12 @@ import { InformationGain } from './informationGain';
 
 describe('Information Gain Calculation Tests', () => {
 
-    const tennisDataSet = new DataSet('test/tennis.csv', 'test/tennis-schema.json', 'PlayTennis', 100);
+    const tennisDataSet = new DataSet('test/tennis.csv', 'test/tennis-schema.json', 100);
     const outlook = tennisDataSet.attributes[0];
     const temperature = tennisDataSet.attributes[1];
     const humidity = tennisDataSet.attributes[2];
     const windy = tennisDataSet.attributes[3];
-    const owlsDataSet = new DataSet('test/owls15.csv', 'test/owls15-schema.json', 'type', 100);
+    const owlsDataSet = new DataSet('test/owls15.csv', 'test/owls15-schema.json', 100);
     const wingWidth = owlsDataSet.attributes[3];
     const bodyWidth = owlsDataSet.attributes[2];
     const wingLength = owlsDataSet.attributes[1];
