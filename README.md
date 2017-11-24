@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/michaeljneelysd/C4.5.ts.svg?branch=master)](https://travis-ci.org/michaeljneelysd/C4.5.ts)
+[![Coverage Status](https://coveralls.io/repos/github/michaeljneelysd/C4.5.ts/badge.svg?branch=master)](https://coveralls.io/github/michaeljneelysd/C4.5.ts?branch=master)
 # C4.5.ts
 
 :deciduous_tree: Ross Quinlan's C4.5 Decision Tree Algorithm<sup>[1](#references)</sup>, implemented in TypeScript. Handles Numeric (continuous) and Categorical (discrete) attributes. Uses the Information Gain Ratio to perform splits. Performs reduced error pruning based on confidence intervals.
