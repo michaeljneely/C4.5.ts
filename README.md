@@ -249,8 +249,8 @@ The 'test/' folder contains a command line script to run multiple C4.5 trials. I
 * `-p` or `--percentageSplit` - The train/test split you wish to use. Default value is 66%.
 * `-n` or `--trials` - The number of trials you wish to run. Default value is 1000.
 
-# Additional Options
-The `constants.ts` file in the Constants folder contains several editable parameters to adjust the decision tree building and pruning processes:
+# Hyperparameters
+The `constants.ts` file in the Constants folder contains several editable hyperparameters to adjust the decision tree building and pruning processes:
 * `useMinInstancePruning: boolean` - Default: false. If true, any leaf nodes that are only reached by a number of training instances less than the `minInstancesPerLeaf` value are pruned away.
 * `minInstancesPerLeaf: number` - Default: 2. Minimum number of training instances that must reach a leaf node to spare it from pruning.
 * `zValue: number` - Default: 0.69. The z-value for confidence interval calculations. Default confidence is 75% -> z-value of 0.69.
@@ -264,3 +264,11 @@ npm run test
 
 # References
 [1] Ross, Quinlan. C4.5: Programs for Machine Learning. Morgan Kaufmann Publishers Inc., 1993.
+
+# To Do
+* Learning Curves
+* ROC Curves
+* Cross-Validation
+  * N-fold Cross-Validation
+  * Leave-One-Out Cross-Validation
+  * Additional Hyperparameters

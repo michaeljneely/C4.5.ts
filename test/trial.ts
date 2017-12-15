@@ -56,6 +56,7 @@ const runTrials = (): void => {
         // Shoud we replace the current best tree?
         const moreAccurate: boolean = accuracy > bestAccuracy;
         // If accuracies are roughly equivalent, take the one with fewer nodes
+        // Okham's Razor -> The simplest hypothesis is the most accurate
         const shouldReplace: boolean  = (accuracy.toPrecision(2) === bestAccuracy.toPrecision(2) && bestC45 && (c45.nodeCount() < bestC45.nodeCount()));
         // Replace current best tree
         if (moreAccurate || shouldReplace) {
