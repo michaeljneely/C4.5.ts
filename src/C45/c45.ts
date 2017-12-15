@@ -119,8 +119,7 @@ export class C45 {
               parent.rule = new PredictionRule(target, condition, baseOne, list);
               return;
           }
-          // For each attribute a, find the normalized information gain ratio from splitting on a.
-          // Let a_best be the attribute with the highest normalized information gain.
+          // Choose split attribute based on highest information gain ratio
           const aBest: ISelectedAttribute = this.chooseSplitAttribute(list, attributes, target);
           // Base Two: If 0 InformationGain => declare new Prediction Rule Leaf with majority class
           if (!aBest.desiredAttribute) {
