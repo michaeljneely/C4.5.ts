@@ -50,7 +50,7 @@
   "dependencies": {
     "command-line-args": "^4.0.7",
     "fs-extra": "^4.0.2",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
